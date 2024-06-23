@@ -1,0 +1,58 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welcome",
+    "LongWelcomeMessage": "Welcome to the School Management application. This is a startup project based on the ABP framework. ",
+
+    "Menu:Management": "School Management",
+    "Menu:Students": "Students",
+    "Actions": "Actions",
+    "Close": "Close",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "NewStudent": "New Student",
+    "Name": "Name",
+    "Age": "Age",
+    "Class": "Class",
+    "RollNumber": "RollNumber",
+    "CreationTime": "Creation time",
+    "AreYouSure": "Are you sure?",
+    "AreYouSureToDelete": "Are you sure you want to delete this item?",
+    "Permission:Management": "School Management",
+    "Permission:Students": "Student Permission",
+    "Permission:Students.Create": "Creating new Students",
+    "Permission:Students.Edit": "Editing the Students",
+    "Permission:Students.Delete": "Deleting the Students",
+
+
+    "Menu:Subjects": "Subjects",
+    "NewSubject": "New Subject",
+    "Language": "Language",
+    "Enum:Language.0": "Undefined",
+    "Enum:Language.1": "English",
+    "Enum:Language.2": "Hindi",
+    "Enum:Language.3": "Japanese",
+    "Enum:Language.4": "German",
+    "Permission:Subjects": "Subjects Permission",
+    "Permission:Subjects.Create": "Creating new Subjects",
+    "Permission:Subjects.Edit": "Editing the Subjects",
+    "Permission:Subjects.Delete": "Deleting the Subjects",
+
+    "Management:00001": "There is already a teacher with the same name: {name}",
+    "Menu:Teachers": "Teachers",
+    "NewTeacher": "New Teacher",
+    "Sex": "Sex",
+    "Teacher": "Teacher",
+    "Enum:Gender.0": "Male",
+    "Enum:Gender.1": "Female",
+    "Permission:Teachers": "Teachers Permission",
+    "Permission:Teachers.Create": "Creating new Teachers",
+    "Permission:Teachers.Edit": "Editing the Teachers",
+    "Permission:Teachers.Delete": "Deleting the Teachers",
+    "TeacherDeletionConfirmationMessage": "Are you sure to delete the teacher '{0}'?",
+
+    "ATeacherIsRequiredForCreatingSubject": "A teacher is required to create a new subject"
+
+  }
+}

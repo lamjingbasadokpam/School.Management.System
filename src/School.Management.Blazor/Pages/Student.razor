@@ -1,0 +1,185 @@
+﻿@page "/student"
+@attribute [Authorize(ManagementPermissions.Students.Default)]
+@using School.Management.Permissions
+@using Volo.Abp.Application.Dtos
+@using School.Management.Students
+@using School.Management.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<ManagementResource> L
+@inject AbpBlazorMessageLocalizerHelper<ManagementResource> LH
+@inherits AbpCrudPageBase<IStudentAppService, StudentDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateStudentDto>
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h2>@L["Students"]</h2>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                @if (HasCreatePermission)
+                {
+                <Button Color="Color.Primary" Clicked="OpenCreateModalAsync"> @L["NewStudent"]
+                </Button>
+                }
+            </Column>
+        </Row>
+    </CardHeader>
+    <CardBody>
+        <DataGrid TItem="StudentDto"
+                  Data="Entities"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="StudentDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="StudentDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="StudentDto"
+                                          Text="@L["Edit"]"
+                                          Visible=HasUpdatePermission
+                                          Clicked="() => OpenEditModalAsync(context)" />
+                            <EntityAction TItem="StudentDto"
+                                          Text="@L["Delete"]"
+                                          Visible=HasDeletePermission
+                                          Clicked="() => DeleteEntityAsync(context)"
+                                          ConfirmationMessage="()=>GetDeleteConfirmationMessage(context)" />
+                        </EntityActions>
+
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+
+                <DataGridColumn TItem="StudentDto" Field="@nameof(StudentDto.Name)" Caption="@L["Name"]"></DataGridColumn>
+                <DataGridColumn TItem="StudentDto" Field="@nameof(StudentDto.Age)" Caption="@L["Age"]"></DataGridColumn>
+                <DataGridColumn TItem="StudentDto" Field="@nameof(StudentDto.Class)" Caption="@L["Class"]"></DataGridColumn>
+                <DataGridColumn TItem="StudentDto" Field="@nameof(StudentDto.RollNumber)" Caption="@L["RollNumber"]">  </DataGridColumn>
+                <DataGridColumn TItem="StudentDto" Field="@nameof(StudentDto.CreationTime)" Caption="@L["CreationTime"]">
+                    <DisplayTemplate>
+                        @context.CreationTime.ToLongDateString()
+                    </DisplayTemplate>
+                </DataGridColumn>
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+<Modal @ref="@CreateModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["NewStudent"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewEntity.Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Class"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewEntity.Class">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Age"]</FieldLabel>
+                            <NumericEdit TValue="int" @bind-Value="NewEntity.Age" />
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["RollNumber"]</FieldLabel>
+                            <NumericEdit TValue="int" @bind-Value="NewEntity.RollNumber" />
+                        </Field>
+                    </Validation>
+                   
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="CreateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+<Modal @ref="@EditModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@EditingEntity.Name</ModalTitle>
+                <CloseButton Clicked="CloseEditModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Name">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Class"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Class">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Age"]</FieldLabel>
+                            <NumericEdit TValue="int" @bind-Value="EditingEntity.Age" />
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["RollNumber"]</FieldLabel>
+                            <NumericEdit TValue="int" @bind-Value="EditingEntity.RollNumber" />
+                        </Field>
+                    </Validation>
+
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="UpdateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+@code
+{
+    public Student() // Constructor
+    {
+        CreatePolicyName = ManagementPermissions.Students.Create;
+        UpdatePolicyName = ManagementPermissions.Students.Edit;
+        DeletePolicyName = ManagementPermissions.Students.Delete;
+    }
+}
